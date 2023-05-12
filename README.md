@@ -5,4 +5,4 @@ Members:
 Daniel Moreira
 Pedro Dalla-Lana
 Sanny C M de Sales
-Sarah Aline
+Sarah Aline Caetano Cruz
