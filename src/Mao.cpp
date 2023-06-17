@@ -8,10 +8,10 @@
 #include <iostream>
 
 
-Mao::Mao(){ std::vector<Carta> _mao; }
+Mao::Mao() : _mao() {}
 
 
-Mao::~Mao(){ delete _mao; }
+Mao::~Mao(){}
 
 
 
@@ -19,64 +19,84 @@ void Mao::adiciona_carta(Carta carta){
     
     _mao.push_back(carta);
     
-    }
+}
 
 
 
 
-void ordena_cartas(){
-
+void Mao::ordena_cartas(){
     std::sort(_mao.begin(), _mao.end());
 }
 
 
 Carta Mao::maior_carta(){
-    ordena_cartas(_mao);
-    Carta maior = _mao.end();
+    ordena_cartas();
+    Carta maior = *(_mao.end());
     return maior;
-
 }
 
 Carta Mao:: menor_carta(){
-    ordena_cartas(_mao);
-    Carta menor = _mao.begin();
+    ordena_cartas();
+    Carta menor = _mao.back();
     return menor;
 }
 
 int Mao::mesmo_valor(){
-    for(int i=0; i<_mao.lenght(); ++i){
-
+    if (!_mao.empty()){
+        Carta menor = menor_carta();
+        for (int i = 0; i < _mao.size(); ++i){
+            Carta atual = _mao.at(i);
+            if (menor.getValor() != atual.getValor()){
+                return false;
+            }
+        }
+        return true;
     }
+    return false;
 }
 
 
 
 bool Mao::mesmo_naipe(){
-    if (!mao.empty){
-    Carta menor = menor_carta();
-    for (int i=0; i< _mao.lenght(); ++i){
-        Carta atual = _mao.at(i);
-        if (menor.naipe != atual.naipe){
-            return false;
+    if (!_mao.empty()){
+        Carta menor = menor_carta();
+        for (int i = 0; i < _mao.size(); ++i){
+            Carta atual = _mao.at(i);
+            if (menor.getNaipe() != atual.getNaipe()){
+                return false;
+            }
         }
         return true;
     }
     return false;
-    }
-};
+}
 
-bool Mao::sequencia(){
-    for(int i=0; i<_mao.lenght()){
-        Carta atual=_mao.at(i);
-        if ((i+1)<_mao.lenght()){
-            Carta prox = _mao.at(i+1);
-        }    
-        if (std::stoi(atual.valor, nullptr, 10)+1!=std::stoi(prox.valor, nullptr, 10)){
+
+
+bool Mao::sequencia() {
+    if (_mao.empty() || _mao.size() <= 2) {
+        return false;
+    }
+    Carta atual = _mao.at(0);
+    Carta prox = _mao.at(1);
+
+    for (int i = 0; i < _mao.size() - 1; ++i) {
+        
+        atual = _mao.at(i);
+        
+        if(i + 1 < _mao.size()){
+            prox = _mao.at(i + 1);
+        }
+
+        if (atual.getValor()+ 1 != prox.getValor()) {
             return false;
         }
     }
+
     return true;
-};
+}
+
+
 
 
 

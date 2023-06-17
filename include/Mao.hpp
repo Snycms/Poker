@@ -21,6 +21,9 @@ class Mao{
 
     //Compara as cartas da mao de um jogador e retorna a maior
     Carta maior_carta(); 
+
+    //Compara as cartas da mao de um jogador e retorna a maior
+    Carta menor_carta();
     
     //ordena as cartas da mão do jogador
     void ordena_cartas();
