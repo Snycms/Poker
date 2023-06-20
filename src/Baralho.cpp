@@ -55,9 +55,13 @@ void Baralho::distribui_carta(std::string jogada, Mao &mao){
 
 //TESTE ONLINE GDB
 void Baralho::imprime_baralho(){
-    for(std::vector<Carta>::iterator it = _baralho.begin(); it != _baralho.end(); ++it){
+  /*  for(std::vector<Carta>::iterator it = _baralho.begin(); it != _baralho.end(); ++it){
         it->exibe_carta();
-    }
+    } */
+    
+    for(const auto& carta : _baralho){
+    carta.exibe_carta();
+}
     std::cout << _baralho.size() << std::endl;
 }
 
