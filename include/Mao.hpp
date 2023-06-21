@@ -31,102 +31,30 @@ class Mao{
     //Retorna valor da mao do jogador
     std::string valor_mao();
 
-    //confere se as cartas são do mesmo naipe
-    bool mesmo_naipe();
+    //confere se as cartas são do mesmo naipe (flush)
+    bool flush();
 
-    //confere se as cartas estão em sequencia
-    bool sequencia();
+    //confere se as cartas estão em sequencia (straight)
+    bool straight();
+
+    //confere se as cartas estão em sequência e são do mesmo naipe (straight flush)
+    bool straightFlush()
 
     //retorna "0" se não houver pares;
-    //retorna "par" se houve um par;
-    //retorna "2pares" se houverem 2 pares;
+    //retorna "1" se houve um par;
+    //retorna "2" se houverem 2 pares;
     //a mão não pode estar vazia.
-    std::string par();
+    int pair();
     
     //checa se a mão é um Royal Flush;
-    bool Royal_flush();
+    //retorna 1 se verdadeiro;
+    //retorna 0 se falso;
+    int Royal_flush();
     
-     }
-
-      class Royal_flush : public Mao{
-      public:
-
-      //compara se a mão do jogador é um Royal Flush
-      bool combina() const override;
-    }
+  };
 
 
-
-    class Straight_flush : public Mao{
-       public:
-
-      //compara se a mão do jogador é um Straight Flush
-      bool combina() const override;
-    }
-
-
-    class Quadra : public Mao{
-       public:
-
-      //compara se a mão do jogador é uma quadra
-      bool combina() const override;
-    }
-
-
-
-    class Full_house : public Mao{ public:
-
-      //compara se a mão do jogador é um Full House
-      bool combina() const override;
-    }
-
-
-
-    class Flush : public Mao{ 
-      public:
-
-      //compara se a mão do jogador é um Flush
-      bool combina() const override;
-    }
-
-
-
-    class Trinca : public Mao{
-      public:
-
-      //compara se a mão do jogador é uma trinca
-      bool combina() const override;
-    }
-
-
-
-    class Dois_pares : public Mao{
-      public:
-
-      //compara se a mão do jogador tem dois pares
-      bool combina() const override;
-    }
-
-
-
-    class Par : public Mao{ 
-      public:
-
-      //compara se a mão do jogador tem um par
-      bool combina() const override;
-    }
-
-
-
-
-    class Carta_alta : public Mao{ 
-      public:
-
-      //compara se a mão do jogador tem a carta mais alta
-      bool combina() const override;
-    }
-
-
+    
 
     /* 
     //POSSIVEIS MAOS--------------------------------------------

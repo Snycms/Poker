@@ -41,7 +41,7 @@ Carta Mao:: menor_carta(){
     return menor;
 }
 
-std::string Mao::par(){
+int Mao::par(){
     int count = 0;
 
     std::string s;
@@ -60,28 +60,12 @@ std::string Mao::par(){
         }
     }
 
-    switch(count){
-        case 0:
-            s = "0";
-            break;
-
-        case 1:
-            s = "par";
-            break;
-
-        case 2:
-            s = "2pares";
-            break;
-
-        default:
-    }
-
-    return s;
+    return count;
 }
 
 
 
-bool Mao::mesmo_naipe(){
+bool Mao::flush(){
     if (!_mao.empty()){
         Carta menor = menor_carta();
         for (int i = 0; i < _mao.size(); ++i){
@@ -97,7 +81,7 @@ bool Mao::mesmo_naipe(){
 
 
 
-bool Mao::sequencia() {
+bool Mao::straight() {
     if (_mao.empty() || _mao.size() <= 2) {
         return false;
     }
@@ -120,30 +104,27 @@ bool Mao::sequencia() {
     return true;
 }
 
-
-
-
-
-bool Royal_Flush::combina()const override{
-    if (!mesmo_naipe()){
-        return false;
-    }
-    std::vector <string> sequencia = {"10", "J", "Q", "K", "A"};
-    for (int i=0; i<_mao.lenght(); ++i){
-        Carta atual = _mao.at(i);
-        if(atual.valor !=sequencia[i]){
-            return false;
-        } 
-    }
-    return true;
+bool Mao::straightFlush() {
+    if(straight() && flush()) return true;
+    else return false;
 }
 
- 
-bool Straight_flush::combina()const override{
-    if(!mesmo_naipe() || !sequencia()){
-        return false;
+
+
+
+
+int Mao::Royal_flush() {
+    if (!flush()){
+        return 0;
     }
-    return true;
+    std::vector <std::string> sequencia = {"10", "J", "Q", "K", "A"};
+    for (int i=0; i<_mao.size() -1; ++i){
+        Carta atual = _mao.at(i);
+        if(atual.getNaipe() != sequencia[i]){
+            return 0;
+        } 
+    }
+    return 1;
 }
 
 bool Quadra::combina()const override{
@@ -175,14 +156,6 @@ bool Full_house::combina()const override{
         return false;
     }
 };
-
-bool Flush::combina()const override{
-    if(!mesmo_naipe){
-        return false;
-    }
-    return true
-}
-
 bool Trinca::combina()const override{
     std::vector<Carta> atual = mao;
 
