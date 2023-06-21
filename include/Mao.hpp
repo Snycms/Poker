@@ -37,8 +37,11 @@ class Mao{
     //confere se as cartas estão em sequencia
     bool sequencia();
 
-    
-    int mesmo_valor();
+    //retorna "0" se não houver pares;
+    //retorna "par" se houve um par;
+    //retorna "2pares" se houverem 2 pares;
+    //a mão não pode estar vazia.
+    std::string par();
     
     //checa se a mão é um Royal Flush;
     bool Royal_flush();

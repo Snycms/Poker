@@ -41,18 +41,40 @@ Carta Mao:: menor_carta(){
     return menor;
 }
 
-int Mao::mesmo_valor(){
-    if (!_mao.empty()){
-        Carta menor = menor_carta();
-        for (int i = 0; i < _mao.size(); ++i){
-            Carta atual = _mao.at(i);
-            if (menor.getValor() != atual.getValor()){
-                return false;
-            }
+std::string Mao::par(){
+    int count = 0;
+
+    std::string s;
+
+    int size = _mao.size();
+
+    for(int i = 0; i < _mao.size() -2; ++i){
+        Carta a = _mao.at(i);
+
+        for(int j = i + 1; j < _mao.size() - 1; ++j){
+            Carta b = _mao.at(j);
+            if(a.getValor() == b.getValor()) ++count;
+            
         }
-        return true;
     }
-    return false;
+
+    switch(count){
+        case 0:
+            s = "0";
+            break;
+
+        case 1:
+            s = "par";
+            break;
+
+        case 2:
+            s = "2pares";
+            break;
+
+        default:
+    }
+
+    return s;
 }
 
 
