@@ -49,11 +49,13 @@ std::string Mao::par(){
     int size = _mao.size();
 
     for(int i = 0; i < _mao.size() -2; ++i){
+        if(count == 2) break;
         Carta a = _mao.at(i);
 
         for(int j = i + 1; j < _mao.size() - 1; ++j){
             Carta b = _mao.at(j);
             if(a.getValor() == b.getValor()) ++count;
+            break;
             
         }
     }
