@@ -32,20 +32,20 @@ class Mao{
     std::string valor_mao();
 
     //confere se as cartas são do mesmo naipe
-     bool mesmo_naipe();
+    bool mesmo_naipe();
 
-     //confere se as cartas estão em sequencia
-     bool sequencia();
+    //confere se as cartas estão em sequencia
+    bool sequencia();
 
-     int mesmo_valor();
     
-    virtual bool combina() const = 0;
+    int mesmo_valor();
+    
+    //checa se a mão é um Royal Flush;
+    bool Royal_flush();
     
      }
 
-
-
-    class Royal_flush : public Mao{
+      class Royal_flush : public Mao{
       public:
 
       //compara se a mão do jogador é um Royal Flush
