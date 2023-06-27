@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 class Mao{
   protected:
@@ -22,6 +23,10 @@ class Mao{
     //Compara as cartas da mao de um jogador e retorna a maior
     Carta maior_carta(); 
 
+    //Checa se a mão é um par, trinca, quadra ou full house
+    //Se não for nenhuma dessas mãos, retorna "HighCard" (carta alta)
+    std::string getHandRank();
+
     //Compara as cartas da mao de um jogador e retorna a maior
     Carta menor_carta();
     
@@ -32,24 +37,18 @@ class Mao{
     std::string valor_mao();
 
     //confere se as cartas são do mesmo naipe (flush)
-    bool flush();
+    std::string flush();
 
     //confere se as cartas estão em sequencia (straight)
-    bool straight();
+    std::string straight();
 
     //confere se as cartas estão em sequência e são do mesmo naipe (straight flush)
-    bool straightFlush()
-
-    //retorna "0" se não houver pares;
-    //retorna "1" se houve um par;
-    //retorna "2" se houverem 2 pares;
-    //a mão não pode estar vazia.
-    int pair();
+    std::string straightFlush();
     
     //checa se a mão é um Royal Flush;
     //retorna 1 se verdadeiro;
     //retorna 0 se falso;
-    int Royal_flush();
+    std::string Royal_flush();
     
   };
 
@@ -82,7 +81,5 @@ class Mao{
 
     //Get mao
     std::vector<Carta> &getMao();*/
-
-};
 
 #endif

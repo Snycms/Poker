@@ -41,31 +41,49 @@ Carta Mao:: menor_carta(){
     return menor;
 }
 
-int Mao::par(){
-    int count = 0;
+std::string Mao::getHandRank(){
+    std::unordered_map<std::string, int> cardCount;
 
-    std::string s;
+    for(int i = 0; i < _mao.size(); i++){
+        if(cardCount.find(_mao.at(i).getNaipe()) == cardCount.end()){
+            cardCount[_mao.at(i).getNaipe()] = 1;
+        }
+        
+        else cardCount[_mao.at(i).getNaipe()]++;
+    }
 
-    int size = _mao.size();
+    int pairCount = 0;
+    int threeOfAKindCount = 0;
+    int fourOfAKindCount = 0;
 
-    for(int i = 0; i < _mao.size() -2; ++i){
-        if(count == 2) break;
-        Carta a = _mao.at(i);
-
-        for(int j = i + 1; j < _mao.size() - 1; ++j){
-            Carta b = _mao.at(j);
-            if(a.getValor() == b.getValor()) ++count;
-            break;
-            
+    for (const auto& count : cardCount) {
+        if (count.second == 2) {
+            pairCount++;
+        } else if (count.second == 3) {
+            threeOfAKindCount++;
+        } else if (count.second == 4) {
+            fourOfAKindCount++;
         }
     }
 
-    return count;
+    if (fourOfAKindCount > 0) {
+        return "FourOfAKind";
+    } else if (threeOfAKindCount > 0 && pairCount > 0) {
+        return "FullHouse";
+    } else if (threeOfAKindCount > 0) {
+        return "ThreeOfAKind";
+    } else if (pairCount >= 2) {
+        return "TwoPair";
+    } else if (pairCount == 1) {
+        return "Pair";
+    } else {
+        return "HighCard";
+    }
+
+     
 }
 
-
-
-bool Mao::flush(){
+std::string Mao::flush(){
     if (!_mao.empty()){
         Carta menor = menor_carta();
         for (int i = 0; i < _mao.size(); ++i){
@@ -74,14 +92,12 @@ bool Mao::flush(){
                 return false;
             }
         }
-        return true;
+        return "Flush";
     }
-    return false;
+    return "HighCard";
 }
 
-
-
-bool Mao::straight() {
+std::string Mao::straight() {
     if (_mao.empty() || _mao.size() <= 2) {
         return false;
     }
@@ -97,25 +113,21 @@ bool Mao::straight() {
         }
 
         if (atual.getValor()+ 1 != prox.getValor()) {
-            return false;
+            return "HighCard";
         }
     }
 
-    return true;
+    return "Straight";
 }
 
-bool Mao::straightFlush() {
-    if(straight() && flush()) return true;
+std::string Mao::straightFlush() {
+    if(straight() == "Straight" && flush() == "Flush") return "StraightFlush";
     else return false;
 }
 
-
-
-
-
-int Mao::Royal_flush() {
-    if (!flush()){
-        return 0;
+std::string Mao::Royal_flush() {
+    if (flush() != "Flush"){
+        return "HighCard";
     }
     std::vector <std::string> sequencia = {"10", "J", "Q", "K", "A"};
     for (int i=0; i<_mao.size() -1; ++i){
@@ -124,43 +136,12 @@ int Mao::Royal_flush() {
             return 0;
         } 
     }
-    return 1;
+    return "RoyalFlush";
 }
 
-bool Quadra::combina()const override{
-    if(_mao.at(0)!= _mao.at(1)){
-        for(int i=1; i<_mao.lenght(); ++i){
-            Carta atual = _mao.at(i);
-            Carta prox = _mao.at(i+1);
-            if(atual.valor != prox.valor){
-                return false.
-            }
-            return true;
-        }
-    }else{
-        for(int i=0; i<_mao.lenght(); ++i){
-            Carta atual = _mao.at(i);
-            Carta prox = _mao.at(i+1);
-        if(atual.valor != prox.valor){
-            return false;
-        }
-        return true;
-        }
-    }
-};
-
-bool Full_house::combina()const override{
-    if (Trinca::combina() && Par::combina()){
-        return true;
-    }else{
-        return false;
-    }
-};
-bool Trinca::combina()const override{
-    std::vector<Carta> atual = mao;
 
 
-}
+
 
 /*std::string Mao::valor_mao(){
     if(royal_flush_e_straight_flush() != 0){
