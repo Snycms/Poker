@@ -32,6 +32,9 @@ class Carta{
         bool getRosto_baixo(); 
         //Set se a Carta esta virada
         void setRosto_baixo(bool rosto_baixo);
+
+        //sobrecarga de operador >
+        bool operator>(const Carta& outra) const;
 };
 
 #endif
