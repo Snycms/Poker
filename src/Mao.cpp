@@ -67,7 +67,7 @@ std::string Mao::getHandRank(){
     }
 
     if (quadraCount > 0) {
-        return "Quadra";
+        return "quadra";
     } else if (trincaCount > 0 && parCount > 0) {
         return "fullHouse";
     } else if (trincaCount > 0) {
@@ -92,7 +92,7 @@ std::string Mao::flush(){
                 return false;
             }
         }
-        return "Flush";
+        return "flush";
     }
     return "cartaAlta";
 }
@@ -113,20 +113,20 @@ std::string Mao::straight() {
         }
 
         if (atual.getValor()+ 1 != prox.getValor()) {
-            return "HighCard";
+            return "cartaAlta";
         }
     }
 
-    return "Straight";
+    return "straight";
 }
 
 std::string Mao::straightFlush() {
-    if(straight() == "Straight" && flush() == "Flush") return "StraightFlush";
+    if(straight() == "straight" && flush() == "flush") return "straightFlush";
     else return false;
 }
 
 std::string Mao::Royal_flush() {
-    if (flush() != "Flush"){
+    if (flush() != "flush"){
         return "cartaAlta";
     }
     std::vector <std::string> sequencia = {"10", "J", "Q", "K", "A"};
@@ -136,7 +136,7 @@ std::string Mao::Royal_flush() {
             return 0;
         } 
     }
-    return "RoyalFlush";
+    return "royalFlush";
 }
 
 
