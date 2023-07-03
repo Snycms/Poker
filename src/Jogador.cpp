@@ -28,31 +28,27 @@ int Jogador::check_desistir(std::string acao, int jogador_atual){
 
 int Jogador::aposta(std::string tipo_aposta, int valor_aposta){
     //Aposta normal
-    
-    switch(tipo_aposta){
 
-        case "Aposta":
+
+    if(tipo_aposta == "Aposta"){
         setFichas(getFichas() - valor_aposta);
         return valor_aposta;
-        break;
 
-        case "Aumentar":
+    }
+
+    else if(tipo_aposta == "CALL"){
         setFichas(getFichas() - valor_aposta);
         return valor_aposta;
-        break;
+    }
 
-        case "CALL":
-        setFichas(getFichas() - valor_aposta);
-        return valor_aposta;
-        break;
-
-        case "APOSTAR TUDO":
+    else if(tipo_aposta == "APOSTAR TUDO"){
         valor_aposta = getFichas();
         setFichas(0);
         return valor_aposta;
-        break;
 
     }
+
+}
     /*/if(tipo_aposta == "Aposta"){
         setFichas(getFichas() - valor_aposta);
         return valor_aposta;
@@ -73,7 +69,7 @@ int Jogador::aposta(std::string tipo_aposta, int valor_aposta){
         setFichas(0);
         return valor_aposta;
     }*/
-}
+//}
 //-------------------------------------------------------------------
 
 void Jogador::limpar_mesa(){}
