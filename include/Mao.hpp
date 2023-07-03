@@ -24,7 +24,7 @@ class Mao{
     Carta maior_carta(); 
 
     //Checa se a mão é um par, trinca, quadra ou full house
-    //Se não for nenhuma dessas mãos, retorna "HighCard" (carta alta)
+    //Se não for nenhuma dessas mãos, retorna "cartaAlta"
     std::string getHandRank();
 
     //Compara as cartas da mao de um jogador e retorna a maior

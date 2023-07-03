@@ -52,32 +52,32 @@ std::string Mao::getHandRank(){
         else cardCount[_mao.at(i).getNaipe()]++;
     }
 
-    int pairCount = 0;
-    int threeOfAKindCount = 0;
-    int fourOfAKindCount = 0;
+    int parCount = 0;
+    int trincaCount = 0;
+    int quadraCount = 0;
 
     for (const auto& count : cardCount) {
         if (count.second == 2) {
-            pairCount++;
+            parCount++;
         } else if (count.second == 3) {
-            threeOfAKindCount++;
+            trincaCount++;
         } else if (count.second == 4) {
-            fourOfAKindCount++;
+            quadraCount++;
         }
     }
 
-    if (fourOfAKindCount > 0) {
-        return "FourOfAKind";
-    } else if (threeOfAKindCount > 0 && pairCount > 0) {
-        return "FullHouse";
-    } else if (threeOfAKindCount > 0) {
-        return "ThreeOfAKind";
-    } else if (pairCount >= 2) {
-        return "TwoPair";
-    } else if (pairCount == 1) {
-        return "Pair";
+    if (quadraCount > 0) {
+        return "Quadra";
+    } else if (trincaCount > 0 && parCount > 0) {
+        return "fullHouse";
+    } else if (trincaCount > 0) {
+        return "trinca";
+    } else if (parCount >= 2) {
+        return "doisPares";
+    } else if (parCount == 1) {
+        return "par";
     } else {
-        return "HighCard";
+        return "cartaAlta";
     }
 
      
@@ -94,7 +94,7 @@ std::string Mao::flush(){
         }
         return "Flush";
     }
-    return "HighCard";
+    return "cartaAlta";
 }
 
 std::string Mao::straight() {
@@ -127,7 +127,7 @@ std::string Mao::straightFlush() {
 
 std::string Mao::Royal_flush() {
     if (flush() != "Flush"){
-        return "HighCard";
+        return "cartaAlta";
     }
     std::vector <std::string> sequencia = {"10", "J", "Q", "K", "A"};
     for (int i=0; i<_mao.size() -1; ++i){
