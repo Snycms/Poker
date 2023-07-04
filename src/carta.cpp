@@ -26,4 +26,13 @@ std::string Carta::getNaipe(){return _naipe;}
 bool Carta::getRosto_baixo(){return _rosto_baixo;}
 void Carta::setRosto_baixo(bool rosto_baixo){_rosto_baixo = rosto_baixo;}
 
+void Carta::exibe_carta(){
+    std::cout << "Nome: " << getNome() << " - ";
+    std::cout << "Naipe: " << getNaipe() << std::endl;
+};
+
+bool Carta::operator > (const Carta& other) const {
+        return _valor > other._valor;
+    }
+
 #endif
