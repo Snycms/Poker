@@ -49,145 +49,88 @@ using namespace std;
   }
 
 // Destructor.
-   display::~display() {
-  // this is turns off all the special settings and returns the terminal to normal
+   display::~display() 
   endwin(); 
-  // insert deletion of dynamically created objects here too
 }
 
-/*
- * Function: This captures all the userinput.
- * Description: It captures mouse and keyboard events.
- * 		Returns "Positive Number" 
- *			- for user keypress
- *			- this is a character code typed
- * 		Returns "0" - for no user input
- *			- this is when nothing is typed for half a second
- *			- allows for other timed operations to occur
- *		Returns "-1" - for mouse event
- *			- details of the mouse event must be fetched from this class
- *			- use getMouseEventX, getMouseEventY and getMouseEventButton
- */
 int display::captureInput(void) {	
-  // obtain one mouse event or keypress
+
   int ch=getch(); 
-  // this is a switch statement for the result of getch
+
   switch (ch) {
-    case KEY_MOUSE: // this occurs when an mouse event occurs
+    case KEY_MOUSE: 
       {
-        MEVENT mevent; // this is a variable declared of type MEVENT
-        getmouse(&mevent); // this gets the mouse event from ncurses (library)
-        mouseEventX = mevent.x; // get the column location of the event
-        mouseEventY = mevent.y; // get the row location of the event
-        mouseEventButton = mevent.bstate; // get the button state of the mouse
-        return -1; // -1 is for a mouse event
+        MEVENT mevent; 
+        getmouse(&mevent); 
+        mouseEventX = mevent.x; 
+        mouseEventY = mevent.y; 
+        mouseEventButton = mevent.bstate; 
+        return -1; 
       }
       break;
-    case ERR: // this occurs when there is a timeout
+    case ERR: 
       {
-        return 0; // 0 is when nothing occurs
+        return 0; 
       }
       break;
-    default: // this occurs when a key is pressed
-      return ch; // a character is when the user types something
+    default: 
+      return ch; 
   }
 
-  return 0; // this is never called, but is used to stop compiler complaints
+  return 0; 
 }
 
-/*
- * Function: Updates all the information in the display class on window resize
- * Description: This function just updates information, it requires the call
- *		from a static singal handler. Signal handlers service interrupts and require
- *		a static function to be called, because they are not part of the main
- * 		program control flow. The signal handler should be declared in the main
- *		class, because your game should redraw the display on a resize.
- */
 void display::handleResize(int sig) {
-#ifdef TIOCGSIZE // operating system dependant differences
+#ifdef TIOCGSIZE 
   struct ttysize ts;
-  ioctl(STDIN_FILENO, TIOCGSIZE, &ts); // get the information of the terminal
+  ioctl(STDIN_FILENO, TIOCGSIZE, &ts); 
   cols = ts.ts_cols;
   lines = ts.ts_lines;
 #elif defined(TIOCGWINSZ)
   struct winsize ts;
-  ioctl(STDIN_FILENO, TIOCGWINSZ, &ts); // get the information of the terminal
+  ioctl(STDIN_FILENO, TIOCGWINSZ, &ts); 
   cols = ts.ws_col;
   lines = ts.ws_row;
-#endif /* TIOCGSIZE */
-  resizeterm(lines, cols); // sets the ncurses window size correctly
+#endif 
+  resizeterm(lines, cols); 
 }
 
-/*
- * Function: Displays various cards on the game screen
- * Description: This function displays various playing cards on the screen.
- *		The first two arguments are the x and y coordinates of the top left corner
- * 		of the card. 
- *			The suit values are: 1=spades, 2=hearts, 3=clubs, 4=diamonds
- * 			The numbers are: 1=Ace, 2-10=2-10, 11=Jack, 12=Queen, 13=King, 14=Joker
- *		Any suit and number that do not match the valid numberrs generates a face down
- *		card.
- *			The printAtt allows for one or more any of the following display settings:
- *				A_NORMAL        Normal display (no highlight)
- *				A_STANDOUT      Best highlighting mode of the terminal.
- *				A_UNDERLINE     Underlining
- *				A_REVERSE       Reverse video
- *				A_BLINK         Blinking
- *				A_DIM           Half bright
- *				A_BOLD          Extra bright or bold
- *				A_PROTECT       Protected mode
- *				A_INVIS         Invisible or blank mode
- *				A_ALTCHARSET    Alternate character set
- *				A_CHARTEXT      Bit-mask to extract a character
- *				COLOR_PAIR(n)   Color-pair number n 
- */
 
 void display::displayCard(int x, int y, int suit, int number, int printAtt) {
 
-  // Ncurses drawing settings
   attron(COLOR_PAIR(1) | printAtt);
-  // prevent draw if it off the screen
+  
   if (x>=0 && y>=0 && x<cols-6 && y<lines-lineBoundaryOffset) {
-    // print the top lines of the card
     mvprintw(y,x,"\u250c\u2500\u2500\u2500\u2500\u2510");
-    // the next 4 if statements prevent draw if it is over the bottom of the screen
     if (y<lines-1-lineBoundaryOffset) {
-      move(y+1,x); // move command
-      printFace(suit,number,0, printAtt); // call function to print card face
+      move(y+1,x); 
+      printFace(suit,number,0, printAtt); 
     }
     if (y<lines-2-lineBoundaryOffset) {
-      move(y+2,x); // move command
-      printFace(suit,number,1, printAtt); // call function to print card face
+      move(y+2,x); 
+      printFace(suit,number,1, printAtt); 
     }
     if (y<lines-3-lineBoundaryOffset) {
-      move(y+3,x); // move command
-      printFace(suit,number,2, printAtt); // call function to print card face
+      move(y+3,x); 
+      printFace(suit,number,2, printAtt); 
     }
     if (y<lines-4-lineBoundaryOffset) { 
-      // prints the bottom lines of the card
+      
       mvprintw(y+4,x,"\u2514\u2500\u2500\u2500\u2500\u2518");
     }
   }
-  // Ncurses turn off the drawing settings
   attroff(COLOR_PAIR(1) | printAtt);
 }
 
-/*
- * Function: Print a single line of what is written on the card.
-* Description: This copies suit, number and printAtt from the calling function.
- *		Also includes what line of the card face is being drawn.
- */
-void display::printFace(int suit, int number, int line, int printAtt) {	
-  // draw left edge of the card
+
   printw("\u2502");
 
-  if (suit==2 || suit==4) { // Red for Hearts and Diamonds
+  if (suit==2 || suit==4) { 
     attron(COLOR_PAIR(3) | printAtt);
-  } else { // Black for Spades and Clover
+  } else { 
     attron(COLOR_PAIR(2) | printAtt);
   }
 
-  // this the display of the joker
   if (number==15) {
     if (line==0)
       printw("J%s  ", joker);
@@ -195,11 +138,10 @@ void display::printFace(int suit, int number, int line, int printAtt) {
       printw("oker");
     if (line==2)
       printw("  J%s", joker);
-    // this is the display for the cards with suits and numbers
   } else if (suit>=1 && suit <=4 && number>=2 && number<=14) {
     if (line==0) {
-      printSuit(suit); // function to draw suit
-      printNumber(number); // function to draw number
+      printSuit(suit); 
+      printNumber(number); 
       if (number!=10)
         printw(" ");
       printw(" ");	
@@ -207,14 +149,12 @@ void display::printFace(int suit, int number, int line, int printAtt) {
       if (number!=10)
         printw(" ");
       printw(" ");
-      printNumber(number); // function to draw number
-      printSuit(suit);	// function to draw suit
+      printNumber(number); 
+      printSuit(suit);	
     } else {
       printw("    ");
     }
-    // this is for a face down card
   } else {
-    // the face down cards have a special color
     attron(COLOR_PAIR(4) | printAtt);
     if (line==0)
       printw("%s  %s", spades, hearts);
@@ -231,10 +171,6 @@ void display::printFace(int suit, int number, int line, int printAtt) {
   printw("\u2502");
 }
 
-/*
- * Function: Print the suit of the card
- * Description: This is just a look up table. 
- */
 void display::printSuit(int suit) {
   switch (suit) {
     case 1:
@@ -255,10 +191,6 @@ void display::printSuit(int suit) {
   }
 }
 
-/*
- * Function: Prints the number on the card
- * Description: This is just a look up table.
- */
 void display::printNumber(int number) {
   switch (number) {
     case 2:
