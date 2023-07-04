@@ -6,7 +6,8 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-
+#include <iostream>
+#include<algorithm>
 class Mao{
   protected:
     std::vector<Carta> _mao;
@@ -16,6 +17,8 @@ class Mao{
     Mao();
     //Destrutor
     ~Mao();
+
+    void exibe_mao();
 
     //Adiciona mais cartas no flop, turn e river = setMao
     void adiciona_carta(Carta carta); 
@@ -49,8 +52,12 @@ class Mao{
     //retorna 1 se verdadeiro;
     //retorna 0 se falso;
     std::string Royal_flush();
+
+    std::vector<Carta> &getMao();
     
   };
+
+  
 
 
     

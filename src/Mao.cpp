@@ -3,11 +3,6 @@
 
 #include "Mao.hpp"
 
-#include <algorithm>
-//TESTE ONLINE GDB
-#include <iostream>
-
-
 Mao::Mao() : _mao() {}
 
 
@@ -21,7 +16,11 @@ void Mao::adiciona_carta(Carta carta){
     
 }
 
+std::vector<Carta> &Mao::getMao(){return _mao;}
 
+void Mao::exibe_mao(){
+    
+}
 
 
 void Mao::ordena_cartas(){
