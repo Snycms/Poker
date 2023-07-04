@@ -8,55 +8,48 @@
 #include "display.h"
 
 using namespace std;
+//Construtor
+  display::display(void) {
+// Inicializacao do terminal 
+  // Necessário para exibir os naipes das cartas, combinado com UTF-8 configurado no terminal.  
+    setlocale(LC_ALL,"en_US.utf-8");
 
-/* Function: This is the constructor.
- * Description: It is called whenever an object of class display is initialized
- */
-display::display(void) {
-  /* Initilization of Terminal */
-  // required to get card suits displaying, combined with UTF-8 set in terminal
-  setlocale(LC_ALL,"en_US.utf-8");
+  //nicializa tela ncurses
+    initscr(); 
+  //cores do terminal
+    start_color();
+  // limpa a tela
+    clear();
+  // teclas digitadas nao serao exibidas
+    noecho();
+  // cada carcatere digitado e lido imediatamente
+    cbreak(); 
+  // habilita o uso de teclas na funcao 
+    keypad(stdscr, TRUE);
+  // todos os eventos do mouse serao capturados
+    mousemask(ALL_MOUSE_EVENTS, NULL); 
+  // tempo pra captura de entrada
+    halfdelay(5); 
 
-  // initialize ncurses screen
-  initscr();
-  // allow for color settings
-  start_color();
-  // clear the screen
-  clear();
-  // turn off the keyboard echo (reqiured while drawing)
-  noecho();
-  // Change to character mode (so individual characters are being read at a 
-  // time rather than waiting for a carriage return).
-  cbreak(); 
-  // Allows for function keys to be used (also nessacary for getting the mouse 
-  // movement working).	
-  keypad(stdscr, TRUE);
-  // set which mouse events are captured 
-  mousemask(ALL_MOUSE_EVENTS, NULL); 
-  // Setting the timeout for the capture input values are in 1/10ths of a second.	
-  halfdelay(5); 
+  // largura e altura da tela
+    cols = 80;
+    lines = 24;
+  // atualiza a dimensao
+    handleResize(0);
+  // delocamneto de uma linha
+    lineBoundaryOffset = 1;
 
-  // setup the screen size settings.
-  cols = 80;
-  lines = 24;
-  // this updates the locally stored col and line variables
-  handleResize(0);
-  // set a no card draw offset of 1 so the bottom banner is not overwritten
-  lineBoundaryOffset = 1;
+  //cores das cartas
+    init_pair(1, COLOR_CYAN, COLOR_BLACK); // for card outline
+    init_pair(2, COLOR_BLUE, COLOR_BLACK); // for spades and clubs
+    init_pair(3, COLOR_RED, COLOR_BLACK);  // for hearts and diamonds
+    init_pair(4, COLOR_GREEN, COLOR_BLACK); // for turned over card
+    init_pair(5, COLOR_GREEN, COLOR_BLACK); // for box drawing
+    init_pair(6, COLOR_GREEN, COLOR_BLACK); // for banner display
+  }
 
-  // Settings for card colors (these can be set outside of the display class)
-  init_pair(1, COLOR_CYAN, COLOR_BLACK); // for card outline
-  init_pair(2, COLOR_BLUE, COLOR_BLACK); // for spades and clubs
-  init_pair(3, COLOR_RED, COLOR_BLACK);  // for hearts and diamonds
-  init_pair(4, COLOR_GREEN, COLOR_BLACK); // for turned over card
-  init_pair(5, COLOR_GREEN, COLOR_BLACK); // for box drawing
-  init_pair(6, COLOR_GREEN, COLOR_BLACK); // for banner display
-}
-
-/* Function: This is the destructor.
- * Description: This is called just before an object is deleted.
- */
-display::~display() {
+// Destructor.
+   display::~display() {
   // this is turns off all the special settings and returns the terminal to normal
   endwin(); 
   // insert deletion of dynamically created objects here too
@@ -295,130 +288,4 @@ void display::printNumber(int number) {
       printw(" ");
       break;
   }
-}
-
-/*
- * Function: Erases a rectangle on the screen
- * Description: x,y is for the top left corner, sizeX and sizeY set
- * 			how big the square is.
- */
-void display::eraseBox(int x, int y, int sizeX, int sizeY) {
-  std::string strDraw;
-  int yCount;
-  int maxSizeX;
-
-  // this limits the column size of the draw when it is over the edge
-  // of the drawing area
-  if (sizeX+x > cols)
-    maxSizeX=cols-x;
-  else
-    maxSizeX=sizeX;
-
-  // for the number of rows that need to be drawn
- for (yCount=0; yCount<sizeY;yCount++) {
-    // if the box goes over the edge of the drawable screen
-    // stop drawing by breaking the loop
-    if (yCount+y > lines-lineBoundaryOffset || y < 0)
-      break;
-    // reset the line to be drawn
-    strDraw = "";
-    // check that x is not off the screen
-    if (x<=cols && x >= 0) {
-      // make a string needed for box width	
-      strDraw.append(maxSizeX,' ');
-      // print the line of the box
-      mvprintw(y+yCount,x,"%s",strDraw.c_str());
-    }
-  }
-}
-
-/*
- * Function: Draws a box on the screen
- * Description: x,y is for the top left corner, sizeX and sizeY set
- *          how big the square is. printAtt allows for changes in the
- *			display settings.
- */
-void display::drawBox(int x, int y, int sizeX, int sizeY, int printAtt) {
-  string strDraw;
-  int ii;
-  int yCount;
-
-  // set the box setting colors on
-  attron(COLOR_PAIR(5) | printAtt);    
-
-  // for the box height being drawn loop
-  for (yCount=0; yCount<sizeY;yCount++) {
-    // break loop if the drawing is offscreen
-    if (yCount+y > lines-lineBoundaryOffset || y < 0)
-      break;
-    // if x is on the screen
-    if (x<=cols) {
-      strDraw = "";
-      // for the box width loop
-      for (ii=0;ii<sizeX;ii++){
-        // stop drawing if the x is offscreen
-        if (ii+x > cols || x < 0)
-          break;
-        // first line
-        if (yCount==0) {
-          if (ii==0) {
-            strDraw.append("\u250c"); // left
-          } else if (ii==sizeX-1) {
-            strDraw.append("\u2510"); // right
-          } else {
-            strDraw.append("\u2500"); // middle
-          }
-          // last line
-        } else if (yCount==sizeY-1) {
-          if (ii==0) {
-            strDraw.append("\u2514"); // left
-          } else if (ii==sizeX-1) {
-            strDraw.append("\u2518"); // right
-          } else {
-            strDraw.append("\u2500"); // middle
-          }
-          // other lines
-        } else {
-          if (ii==0) {
-            strDraw.append("\u2502"); // left
-          } else if (ii==sizeX-1) {
-            strDraw.append("\u2502"); // right
-          } else {
-            strDraw.append(" "); // middle
-          }
-        }
-      }
-      // print the line that was created
-      mvprintw(y+yCount,x,"%s",strDraw.c_str());
-    }
-  }
-  // turn off the attribute colors
-  attroff(COLOR_PAIR(5) | printAtt);
-}
-
-/*
- * Function: Draws a banner of text at the bottom right of the screen
- * Description: Inverts the color and draws the banner at the bottom
- *		of the screen. Does not handle carriage returns on the string.
- */
-void display::bannerBottom(string bannerText) {
-  // change to the banner draw settings
-  attron(COLOR_PAIR(6) | A_REVERSE | A_BOLD);
-  // checks if the banner string size is smaller than the width of the screen
-  if((unsigned)cols > bannerText.size()) {
-    // moves the cursor to the bottom of the screen
-    move(lines-1,0);
-    // fill in extra space to the banner text is right adjusted
-    hline(' ',cols - bannerText.size());
-    // prints out the banner text
- printw("%s", bannerText.c_str());
-    // fill in extra space after the banner text
-    hline(' ',cols - bannerText.size());
-    // if banner string size is larger than width of screen
-  } else {
-    // clip the banner text so it doesn't wrap over to the next line
-    mvprintw(0,0,"%s", (bannerText.substr(0,cols)).c_str());
-  }
-  // turn off the draw colors
-  attroff(COLOR_PAIR(6) | A_REVERSE | A_BOLD);
 }
